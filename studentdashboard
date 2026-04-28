@@ -1,0 +1,228 @@
+index.html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<h2>Student Dashboard</h2>
+
+<form id="form">
+  <input id="name" placeholder="Name" required>
+  <input id="email" placeholder="Email" required>
+  <input id="course" placeholder="Course" required>
+
+  <select id="status">
+    <option>New</option>
+    <option>Contacted</option>
+    <option>Enrolled</option>
+  </select>
+
+  <button>Add</button>
+</form>
+
+<br>
+
+<input id="search" placeholder="Search by course">
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Course</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+
+  <tbody id="list"></tbody>
+</table>
+
+<script src="script.js"></script>
+</body>
+</html>
+
+*****************************************************************
+
+styles.css
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f9;
+  padding: 20px;
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+}
+
+form {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  max-width: 600px;
+  margin: auto;
+}
+
+input, select {
+  width: 100%;
+  margin: 5px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  background: #007bff;
+  color: white;
+  padding: 10px;
+  border: none;
+  width: 100%;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+#search {
+  display: block;
+  margin: 20px auto;
+  width: 50%;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+table {
+  width: 100%;
+  margin-top: 20px;
+  background: white;
+  border-collapse: collapse;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+th, td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background: #007bff;
+  color: white;
+}
+
+
+
+**************************************************************
+
+script.js
+
+const form = document.getElementById("form");
+const list = document.getElementById("list");
+const search = document.getElementById("search");
+
+// 🔹 Get data
+function getData() {
+  return JSON.parse(localStorage.getItem("students")) || [];
+}
+
+// 🔹 Save data
+function saveData(data) {
+  localStorage.setItem("students", JSON.stringify(data));
+}
+
+// 🔹 Show data
+function showData(filter = "") {
+  const data = getData();
+  list.innerHTML = "";
+
+  data
+    .filter(s => s.course.toLowerCase().includes(filter.toLowerCase()))
+    .forEach(s => {
+      list.innerHTML += `
+        <tr>
+          <td>${s.name}</td>
+          <td>${s.email}</td>
+          <td>${s.course}</td>
+          <td>${s.status}</td>
+        </tr>
+      `;
+    });
+}
+
+// 🔹 Add student
+form.addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const student = {
+    name: document.getElementById("name").value,
+    email: document.getElementById("email").value,
+    course: document.getElementById("course").value,
+    status: document.getElementById("status").value
+  };
+
+  const data = getData();
+  data.push(student);
+  saveData(data);
+
+  form.reset();
+
+  showData(); // ⭐ IMPORTANT (this fixes your issue)
+});
+
+// 🔹 Search filter
+search.addEventListener("input", function() {
+  showData(search.value);
+});
+
+// 🔹 Initial load (VERY IMPORTANT)
+showData();
+
+**********************************************
+
+README.md
+Student Recruitment Dashboard
+
+Project Overview
+This is a simple frontend web application built using HTML, CSS, and JavaScript.
+
+The project helps manage student details in a basic dashboard without using any backend or database.
+
+It allows users to:
+- Add student details such as name, email, course interest, and status
+- View all added students in a table
+- Search students by course interest
+- Store data in the browser using localStorage so data stays after refresh
+
+Technologies Used
+- HTML
+- CSS
+- JavaScript
+
+Tools Used
+- ChatGPT (for help with understanding code, structure, and debugging)
+
+What I learned
+- Creating and handling form inputs
+- Storing and retrieving data using localStorage
+- Filtering data using JavaScript
+- Basic CRUD logic in frontend
+
+How to Run
+1. Download or open the project folder
+2. Open index.html in a browser
+3. No installation or server required
+
+Testing Done
+- Added multiple student records
+- Checked data persistence after refresh
+- Tested search functionality
+
+Note
+This project was built as a frontend task to practice JavaScript and basic web development concepts.
